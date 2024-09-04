@@ -22,5 +22,13 @@ async def get_product(id: int, session=Depends(get_session)) -> Product | None:
     return query_result.first()
 
 
+@app.get("/api/product")
+async def get_products(session=Depends(get_session)) -> list[Product]:
+    query = select(Product)
+    query_result = await session.exec(query)
+
+    return query_result.all()
+
+
 if __name__ == "__main__":
     run("main:app", host="localhost", port=8000, reload=True)

@@ -28,5 +28,6 @@ class Product(SQLModel, table=True):
     unit_price: int
     inventory: int
     size_id: int = Field(foreign_key="product_size.id", nullable=False)
+    color_id: int = Field(foreign_key="product_color.id", nullable=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow, sa_column_kwargs={"onupdate": datetime.utcnow})

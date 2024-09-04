@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: gain_miles
+    ports:
+      - "3313:3306"

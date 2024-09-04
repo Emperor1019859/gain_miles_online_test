@@ -1,5 +1,5 @@
 from uvicorn import run
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlmodel import select
 
 from orm.db import get_session
@@ -28,6 +28,24 @@ async def get_products(session=Depends(get_session)) -> list[Product]:
     query_result = await session.exec(query)
 
     return query_result.all()
+
+
+@app.delete("/api/product/{id}")
+async def delete_product(id: int, session=Depends(get_session)) -> dict:
+    query = select(Product).where(Product.id == id)
+    query_result = await session.exec(query)
+    product_obj = query_result.first()
+
+    if product_obj:
+        await session.delete(product_obj)
+        await session.commit()
+
+        return {
+            "status": "ok",
+            "message": f"Product {id = } had been deleted",
+        }
+
+    raise HTTPException(status_code=404, detail="Product not found")
 
 
 if __name__ == "__main__":

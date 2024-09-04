@@ -3,13 +3,13 @@
 1. install requirments.txt
 
 ```bash
+cd src
 pip install -r requirments.txt
 ```
 
 2. run migrations
 
 ```bash
-cd src
 alembic upgrade head
 ```
 

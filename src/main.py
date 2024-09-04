@@ -58,5 +58,23 @@ async def create_product(payload: ProductPayload, session=Depends(get_session)) 
     return product_obj
 
 
+@app.post("/api/product/{id}")
+async def update_product(id: int, payload: ProductPayload, session=Depends(get_session)) -> Product:
+    query = select(Product).where(Product.id == id)
+    query_result = await session.exec(query)
+    product_obj = query_result.first()
+
+    if not product_obj:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    for key, value in payload.dict().items():
+        if hasattr(product_obj, key) and value is not None:
+            setattr(product_obj, key, value)
+
+    await session.commit()
+
+    return product_obj
+
+
 if __name__ == "__main__":
     run("main:app", host="localhost", port=8000, reload=True)

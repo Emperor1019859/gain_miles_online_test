@@ -4,6 +4,7 @@ from sqlmodel import select
 
 from orm.db import get_session
 from orm.models import Product
+from orm.pydantic_models import ProductPayload
 
 
 app = FastAPI()
@@ -46,6 +47,15 @@ async def delete_product(id: int, session=Depends(get_session)) -> dict:
         }
 
     raise HTTPException(status_code=404, detail="Product not found")
+
+
+@app.post("/api/product")
+async def create_product(payload: ProductPayload, session=Depends(get_session)) -> Product:
+    product_obj = Product(**payload)
+    session.add(product_obj)
+    await session.commit()
+
+    return product_obj
 
 
 if __name__ == "__main__":

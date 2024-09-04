@@ -9,3 +9,13 @@ services:
       MYSQL_DATABASE: gain_miles
     ports:
       - "3313:3306"
+
+  web:
+    build: .
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+    ports:
+      - "8000:8000"
